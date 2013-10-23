@@ -18,49 +18,49 @@ numberFail = 2;
 slices = 80:83;
 
 % Section to load the data
-% passBrain = loadData2('Pass','Brai',numberPass,slices);
-% passFull = loadData2('Pass','Full',numberPass,slices);
+passBrain = loadData2('Pass','Brai',numberPass,slices);
+passFull = loadData2('Pass','Full',numberPass,slices);
 passBackground = loadData2('Pass','Back',numberPass,slices);
 % passInskull = loadData2('Pass','Insk',numberPass,slices);
 fprintf('Load Pass Checkpoint\n') % fprintf points are just to see the progress of the script
 
-% passBrain = double(passBrain./repmat(max(passBrain')',1,length(passBrain(1,:))));
-% passFull = passFull./repmat(max(passFull')',1,length(passFull(1,:)));
-% passBackground = passBackground./repmat(max(passBackground')',1,length(passBackground(1,:)));
-% passInskull = passInskull./repmat(max(passInskull')',1,length(passInskull(1,:)));
-% 
-% for m = 1:numberPass
-%     passBrain(m,:) = histeq(passBrain(m,:));
-%     passFull(m,:) = histeq(passFull(m,:));
-%     passBackground(m,:) = histeq(passBackground(m,:));
-%     passInskull(m,:) = histeq(passInskull(m,:));
-% end
+passBrain = double(passBrain./repmat(max(passBrain')',1,length(passBrain(1,:))));
+passFull = passFull./repmat(max(passFull')',1,length(passFull(1,:)));
+passBackground = passBackground./repmat(max(passBackground')',1,length(passBackground(1,:)));
+passInskull = passInskull./repmat(max(passInskull')',1,length(passInskull(1,:)));
 
-% failBrain = loadData2('Fail','Brai',numberFail,slices);
-% failFull = loadData2('Fail','Full',numberFail,slices);
+for m = 1:numberPass
+    passBrain(m,:) = histeq(passBrain(m,:));
+    passFull(m,:) = histeq(passFull(m,:));
+    passBackground(m,:) = histeq(passBackground(m,:));
+    passInskull(m,:) = histeq(passInskull(m,:));
+end
+
+failBrain = loadData2('Fail','Brai',numberFail,slices);
+failFull = loadData2('Fail','Full',numberFail,slices);
 failBackground = loadData2('Fail','Back',numberFail,slices);
-% failInskull = loadData2('Fail','Insk',numberFail,slices);
+failInskull = loadData2('Fail','Insk',numberFail,slices);
 fprintf('Load Fail Checkpoint\n')
 
-% failBrain = failBrain./repmat(max(failBrain')',1,length(failBrain(1,:)));
-% failFull = failFull./repmat(max(failFull')',1,length(failFull(1,:)));
-% failBackground = failBackground./repmat(max(failBackground')',1,length(failBackground(1,:)));
-% failInskull = failInskull./repmat(max(failInskull')',1,length(failInskull(1,:)));
-% 
-% for m = 1:numberFail
-%     failBrain(m,:) = histeq(failBrain(m,:));
-%     failFull(m,:) = histeq(failFull(m,:));
-%     failBackground(m,:) = histeq(failBackground(m,:));
-%     failInskull(m,:) = histeq(failInskull(m,:));
-% end
+failBrain = failBrain./repmat(max(failBrain')',1,length(failBrain(1,:)));
+failFull = failFull./repmat(max(failFull')',1,length(failFull(1,:)));
+failBackground = failBackground./repmat(max(failBackground')',1,length(failBackground(1,:)));
+failInskull = failInskull./repmat(max(failInskull')',1,length(failInskull(1,:)));
+
+for m = 1:numberFail
+    failBrain(m,:) = histeq(failBrain(m,:));
+    failFull(m,:) = histeq(failFull(m,:));
+    failBackground(m,:) = histeq(failBackground(m,:));
+    failInskull(m,:) = histeq(failInskull(m,:));
+end
 
 %% Section to set the threshold and calculate the entropies
 % Note that the threshold is only applied to full and background images
 threshold = 120;
 passBackground(passBackground<threshold)= 0;
 failBackground(failBackground<threshold)= 0;
-% passFull(passFull<threshold)= 0;
-% failFull(failFull<threshold)= 0;
+passFull(passFull<threshold)= 0;
+failFull(failFull<threshold)= 0;
 fprintf('Thresholding Checkpoint\n')
 
 %% Section to calculate the entropy criterions
@@ -69,56 +69,57 @@ fprintf('Thresholding Checkpoint\n')
 
 entBackPass = zeros(numberPass,1);
 entCritBackPass = zeros(numberPass,1);
-% entFullPass = zeros(numberPass,1);
-% entCritFullPass = zeros(numberPass,1);
-% entBrainPass = zeros(numberPass,1);
-% entCritBrainPass = zeros(numberPass,1);
-% entInskullPass = zeros(numberPass,1);
-% entCritInskullPass = zeros(numberPass,1);
+entFullPass = zeros(numberPass,1);
+entCritFullPass = zeros(numberPass,1);
+entBrainPass = zeros(numberPass,1);
+entCritBrainPass = zeros(numberPass,1);
+entInskullPass = zeros(numberPass,1);
+entCritInskullPass = zeros(numberPass,1);
 
 entBackFail = zeros(numberFail,1);
 entCritBackFail = zeros(numberFail,1);
-% entFullFail = zeros(numberFail,1);
-% entCritFullFail = zeros(numberFail,1);
-% entBrainFail = zeros(numberFail,1);
-% entCritBrainFail = zeros(numberFail,1);
-% entInskullFail = zeros(numberFail,1);
-% entCritInskullFail = zeros(numberFail,1);
+entFullFail = zeros(numberFail,1);
+entCritFullFail = zeros(numberFail,1);
+entBrainFail = zeros(numberFail,1);
+entCritBrainFail = zeros(numberFail,1);
+entInskullFail = zeros(numberFail,1);
+entCritInskullFail = zeros(numberFail,1);
 
 for m=1:numberPass
-entBackPass(m,1) = entropyCalc2(passBackground(m,:),'SH');
-entCritBackPass(m,1) = entropyCalc2(passBackground(m,:),'FC');
-% entFullPass(m,1) = entropyCalc2(passFull(m,:),'SH');
-% entCritFullPass(m,1) = entropyCalc2(passFull(m,:),'FC');
-% entBrainPass(m,1) = entropyCalc2(passBrain(m,:),'SH');
-% entCritBrainPass(m,1) = entropyCalc2(passBrain(m,:),'FC');
-% entInskullPass(m,1) = entropyCalc2(passInskull(m,:),'SH');
-% entCritInskullPass(m,1) = entropyCalc2(passInskull(m,:),'FC');
+    entBackPass(m,1) = entropyCalc2(passBackground(m,:),'SH');
+    entCritBackPass(m,1) = entropyCalc2(passBackground(m,:),'FC');
+    entFullPass(m,1) = entropyCalc2(passFull(m,:),'SH');
+    entCritFullPass(m,1) = entropyCalc2(passFull(m,:),'FC');
+    entBrainPass(m,1) = entropyCalc2(passBrain(m,:),'SH');
+    entCritBrainPass(m,1) = entropyCalc2(passBrain(m,:),'FC');
+    entInskullPass(m,1) = entropyCalc2(passInskull(m,:),'SH');
+    entCritInskullPass(m,1) = entropyCalc2(passInskull(m,:),'FC');
 end
 fprintf('Pass images checkpoint\n')
+
 for m = 1:numberFail
-entBackFail(m,1) = entropyCalc2(failBackground(m,:),'SH');
-entCritBackFail(m,1) = entropyCalc2(failBackground(m,:),'FC');
-% entFullFail(m,1) = entropyCalc2(failFull(m,:),'SH');
-% entCritFullFail(m,1) = entropyCalc2(failFull(m,:),'FC');
-% entBrainFail(m,1) = entropyCalc2(failBrain(m,:),'SH');
-% entCritBrainFail(m,1) = entropyCalc2(failBrain(m,:),'FC');
-% entInskullFail(m,1) = entropyCalc2(failInskull(m,:),'SH');
-% entCritInskullFail(m,1) = entropyCalc2(failInskull(m,:),'FC');
+    entBackFail(m,1) = entropyCalc2(failBackground(m,:),'SH');
+    entCritBackFail(m,1) = entropyCalc2(failBackground(m,:),'FC');
+    entFullFail(m,1) = entropyCalc2(failFull(m,:),'SH');
+    entCritFullFail(m,1) = entropyCalc2(failFull(m,:),'FC');
+    entBrainFail(m,1) = entropyCalc2(failBrain(m,:),'SH');
+    entCritBrainFail(m,1) = entropyCalc2(failBrain(m,:),'FC');
+    entInskullFail(m,1) = entropyCalc2(failInskull(m,:),'SH');
+    entCritInskullFail(m,1) = entropyCalc2(failInskull(m,:),'FC');
 end
 fprintf('Fail images checkpoint\n')
 sizePass = size(passBackground);
 sizeFail = size(failBackground);
 
 entTsaBackPass = zeros(sizePass(1),6);
-% entTsaFullPass = zeros(sizePass(1),6);
-% entTsaBrainPass = zeros(sizePass(1),6);
-% entTsaInskullPass = zeros(sizePass(1),6);
+entTsaFullPass = zeros(sizePass(1),6);
+entTsaBrainPass = zeros(sizePass(1),6);
+entTsaInskullPass = zeros(sizePass(1),6);
 
 entTsaBackFail = zeros(sizeFail(1),6);
-% entTsaFullFail = zeros(sizeFail(1),6);
-% entTsaBrainFail = zeros(sizeFail(1),6);
-% entTsaInskullFail = zeros(sizeFail(1),6);
+entTsaFullFail = zeros(sizeFail(1),6);
+entTsaBrainFail = zeros(sizeFail(1),6);
+entTsaInskullFail = zeros(sizeFail(1),6);
 
 % A loop is used for the Tsallis entropy because it runs through 6
 % different values.
@@ -129,16 +130,16 @@ for n = 1:6
     q = values(n);
     
     for m = 1:numberPass
-    entTsaBackPass(m,n) = entropyCalc2(passBackground(m,:), 'TS',q);
-%     entTsaFullPass(m,n) = entropyCalc2(passFull(m,:), 'TS',q);
-%     entTsaBrainPass(m,n) = entropyCalc2(passBrain(m,:), 'TS',q);
-%     entTsaInskullPass(m,n) = entropyCalc2(passInskull(m,:), 'TS',q);
+        entTsaBackPass(m,n) = entropyCalc2(passBackground(m,:), 'TS',q);
+        entTsaFullPass(m,n) = entropyCalc2(passFull(m,:), 'TS',q);
+        entTsaBrainPass(m,n) = entropyCalc2(passBrain(m,:), 'TS',q);
+        entTsaInskullPass(m,n) = entropyCalc2(passInskull(m,:), 'TS',q);
     end
     for m = 1:numberFail
-    entTsaBackFail(m,n) = entropyCalc2(failBackground(m,:), 'TS',q);
-%     entTsaFullFail(m,n) = entropyCalc2(failFull(m,:), 'TS',q);
-%     entTsaBrainFail(m,n) = entropyCalc2(failBrain(m,:), 'TS',q);
-%     entTsaInskullFail(m,n) = entropyCalc2(failInskull(m,:), 'TS',q);
+        entTsaBackFail(m,n) = entropyCalc2(failBackground(m,:), 'TS',q);
+        entTsaFullFail(m,n) = entropyCalc2(failFull(m,:), 'TS',q);
+        entTsaBrainFail(m,n) = entropyCalc2(failBrain(m,:), 'TS',q);
+        entTsaInskullFail(m,n) = entropyCalc2(failInskull(m,:), 'TS',q);
     end
     m = m + 1;
     fprintf('m = %i\n',m);

@@ -6,4 +6,6 @@ The code found in this repository is part of my MSc thesis work. It was added po
 
 The code presented here is just to illustrate some of my work in MatLab. Additional work in C and R were excluded for privacy reasons.
 
+There are an unusal amount of loops used in this code. This is not ideal, but had to be setup this way due to the nature of some functions as well as the size of the data.
+
 If you have any questions, please don't hesitate to contact me at marc.f.dupuis@gmail.com
